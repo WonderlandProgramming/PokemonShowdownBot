@@ -127,7 +127,7 @@ public class WebCalculator {
 		}
 
 		if (enemyPokemonRaw.equals(lastTurnOpponent)) {
-
+			//TODO
 		}
 	}
 

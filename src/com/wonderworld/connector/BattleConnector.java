@@ -53,7 +53,6 @@ public class BattleConnector {
 
 		sleep(15000);
 
-		
 	}
 
 	public List<WebElement> allMoves() {
@@ -92,6 +91,9 @@ public class BattleConnector {
 
 	// TODO
 	public int pickLeadPokemon() {
+		//body > div.ps-room.ps-room-opaque > div.battle-log > div.inner > div:nth-child(14) > em
+		//gegnerisches Team
+		
 		return new Random().nextInt(6);
 	}
 	
