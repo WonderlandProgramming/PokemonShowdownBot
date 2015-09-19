@@ -1,7 +1,13 @@
 package com.wonderworld.battle;
 
 public class Battlefield {
-	private Pokemon[] myPokemon, oppPokemon;
 	
+	public Battlefield() {
+		
+	}
+	
+	public void initiliseTeams(Pokemon[] myTeam, Pokemon[] oppTeam) {
+		
+	}
 	
 }
