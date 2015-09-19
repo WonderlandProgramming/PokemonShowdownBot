@@ -1,6 +1,7 @@
 package com.wonderworld.connector;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
@@ -8,14 +9,19 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import com.wonderworld.battle.BattlePokemon;
+import com.wonderworld.battle.Battlefield;
 import com.wonderworld.battle.WebCalculator;
 
 public class BattleConnector {
 
+	@SuppressWarnings("unused")
 	private WebCalculator calculator;
 	private Selenium selenium;
 
 	private ChatConnector chat;
+	
+	private Battlefield battlefield;
 
 	public BattleConnector(WebCalculator calculator, Selenium pkmnShowdown) {
 		this.calculator = calculator;
@@ -41,6 +47,31 @@ public class BattleConnector {
 
 		sleep(10000);
 
+		battlefield = new Battlefield();
+
+		String myTeam = pageDirect
+				.findElement(By.cssSelector(
+						"body > div.ps-room.ps-room-opaque > div.battle-log > div.inner > div:nth-child(13) > em"))
+				.getText();
+		String oppTeam = pageDirect
+				.findElement(By.cssSelector(
+						"body > div.ps-room.ps-room-opaque > div.battle-log > div.inner > div:nth-child(14) > em"))
+				.getText();
+
+		String[] myTeamArray = myTeam.split(" \\/ ");
+		String[] oppTeamArray = oppTeam.split(" \\/ ");
+
+		BattlePokemon[] myPkmnTeam = { new BattlePokemon(myTeamArray[0]), new BattlePokemon(myTeamArray[1]), new BattlePokemon(myTeamArray[2]),
+				new BattlePokemon(myTeamArray[3]), new BattlePokemon(myTeamArray[4]), new BattlePokemon(myTeamArray[5]) };
+		
+		BattlePokemon[] oppPkmnTeam = { new BattlePokemon(oppTeamArray[0]), new BattlePokemon(oppTeamArray[1]), new BattlePokemon(oppTeamArray[2]),
+				new BattlePokemon(oppTeamArray[3]), new BattlePokemon(oppTeamArray[4]), new BattlePokemon(oppTeamArray[5]) };
+
+		System.out.println("My Team: " + Arrays.toString(myTeamArray));
+		System.out.println("Opp Team: " + Arrays.toString(oppTeamArray));
+		
+		battlefield.initializeTeams(myPkmnTeam, oppPkmnTeam);
+		
 		pickStarter(pageDirect);
 
 		while (waitingForOpponent()) {
@@ -91,13 +122,13 @@ public class BattleConnector {
 
 	// TODO
 	public int pickLeadPokemon() {
-		//body > div.ps-room.ps-room-opaque > div.battle-log > div.inner > div:nth-child(14) > em
-		//gegnerisches Team
-		
+		//
+		// gegnerisches Team
+
 		return new Random().nextInt(6);
 	}
-	
-	public void forfeit(){
+
+	public void forfeit() {
 		chat.println("/forfeit");
 	}
 }

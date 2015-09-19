@@ -6,6 +6,7 @@ import java.io.IOException;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.wonderworld.battle.BattlePokemon;
 
 public class Config {
 	
@@ -49,5 +50,17 @@ public class Config {
 
 	public String getPassword() {
 		return password;
+	}
+	
+	public BattlePokemon[] getBattleTeam(){
+		String[] allLines = team.split("\n");
+		for (int i = 0; i < allLines.length; i++) {
+			if(allLines[i].contains("@")){
+				
+			}
+		}
+		
+		
+		return null;
 	}
 }
