@@ -6,7 +6,7 @@ public class Battlefield {
 		
 	}
 	
-	public void initiliseTeams(Pokemon[] myTeam, Pokemon[] oppTeam) {
+	public void initializeTeams(Pokemon[] myTeam, Pokemon[] oppTeam) {
 		
 	}
 	
