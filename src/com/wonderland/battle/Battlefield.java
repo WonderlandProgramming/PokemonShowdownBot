@@ -6,15 +6,14 @@ import java.util.List;
 
 import com.wonderland.general.Hazard;
 import com.wonderland.general.HazardType;
-import com.wonderland.general.Pokemon;
 
 public class Battlefield {
 	
-	private BattlePokemon myActivePokemon;
-	private BattlePokemon enemyActivePokemon;
+	private String myActivePokemon;
+	private String oppActivePokemon;
 
-	private ArrayList<BattlePokemon> myTeam = new ArrayList<>();
-	private ArrayList<BattlePokemon> oppTeam = new ArrayList<>();
+	private List<BattlePokemon> myTeam = new ArrayList<>();
+	private List<BattlePokemon> oppTeam = new ArrayList<>();
 
 	private HashMap<HazardType, Hazard> myHazards = new HashMap<>();
 	private HashMap<HazardType, Hazard> oppHazards = new HashMap<>();
@@ -40,31 +39,65 @@ public class Battlefield {
 	}
 	
 	/**
+	 * @return my active Pokemon name
+	 */
+	public String getMyActivePokemonName() {
+		return myActivePokemon;
+	}
+	
+	/**
 	 * @return my active Pokemon
 	 */
 	public BattlePokemon getMyActivePokemon() {
-		return myActivePokemon;
+		for (BattlePokemon battlePokemon : myTeam) {
+			if(battlePokemon.getName().equals(myActivePokemon)) {
+				return battlePokemon;
+			}
+		}
+		return null;
 	}
 
 	/**
 	 * @param myActivePokemon my active Pokemon to set
 	 */
-	public void setMyActivePokemon(BattlePokemon myActivePokemon) {
-		this.myActivePokemon = myActivePokemon;
+	public void setMyActivePokemon(String name) {
+		for (BattlePokemon battlePokemon : myTeam) {
+			if(battlePokemon.getName().equals(name)) {
+				this.myActivePokemon = name;
+				return;
+			}
+		}
 	}
 
+	/**
+	 * @return the enemy active Pokemon name
+	 */
+	public String getOppActivePokemonName() {
+		return oppActivePokemon;
+	}
+	
 	/**
 	 * @return the enemy active Pokemon
 	 */
-	public BattlePokemon getEnemyActivePokemon() {
-		return enemyActivePokemon;
+	public BattlePokemon getOppActivePokemon() {
+		for (BattlePokemon battlePokemon : oppTeam) {
+			if(battlePokemon.getName().equals(oppActivePokemon)) {
+				return battlePokemon;
+			}
+		}
+		return null;
 	}
 
 	/**
-	 * @param enemyActivePokemon the enemy active Pokemon to set
+	 * @param oppActivePokemon the enemy active Pokemon to set
 	 */
-	public void setEnemyActivePokemon(BattlePokemon enemyActivePokemon) {
-		this.enemyActivePokemon = enemyActivePokemon;
+	public void setOppActivePokemon(String name) {
+		for (BattlePokemon battlePokemon : oppTeam) {
+			if(battlePokemon.getName().equals(name)) {
+				this.oppActivePokemon = name;
+				return;
+			}
+		}
 	}
 
 	/**
@@ -168,4 +201,9 @@ public class Battlefield {
 		this.weather = weather;
 	}
 
+	@Override
+	public String toString() {
+		return String.format("Battlefield [myActivePokemon={}, enemyActivePokemon={} myTeam={}, enemyTeam={}, myHazards={}, enemyHazards={}, weather={}]", 
+				myActivePokemon, oppActivePokemon, myTeam.toString(), oppTeam.toString(), myHazards.toString(), oppHazards.toString(), weather.toString());
+	}
 }
