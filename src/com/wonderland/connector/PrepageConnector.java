@@ -2,6 +2,7 @@ package com.wonderland.connector;
 
 import java.util.List;
 
+import org.omg.CORBA.ExceptionList;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -35,7 +36,7 @@ public class PrepageConnector {
 			String value = webElement.getAttribute("value");
 			if (value == null || value.equals("")) {
 				webElement.sendKeys(team);
-				sleep(200);
+				sleep(800);
 				break;
 			}
 		}
@@ -89,6 +90,8 @@ public class PrepageConnector {
 	public void login(String username, String password) {
 		WebDriver browserdirect = webClient.getDriver();
 
+		sleep(500);
+
 		WebElement login = browserdirect.findElement(By.name("login"));
 		login.click();
 
@@ -135,16 +138,19 @@ public class PrepageConnector {
 			ou.click();
 			lookForABattle.click();
 
-			while (browserdirect
-					.findElement(By.cssSelector(
-							"#mainmenu > div > div.leftmenu > div.mainmenu > div:nth-child(1) > form > p:nth-child(3) > button"))
-					.getText().contains("Searching"))
-				sleep(500);
+			while (true) {
+				try {
+					webClient.getDriver().findElement(By.cssSelector(
+							"body > div.ps-room.ps-room-opaque > div.battle-log > div.inner > div:nth-child(15) > em"));
+					return true;
+				} catch (Exception e) {
+					sleep(1000);
+				}
+			}
 
 		} catch (Exception e) {
 			return false;
 		}
-		return true;
 	}
 
 	private void sleep(long milis) {
@@ -159,9 +165,20 @@ public class PrepageConnector {
 		WebDriver webDriver = webClient.getDriver();
 
 		WebElement musik = webDriver.findElement(By.cssSelector("button.icon:nth-child(2)"));
-        musik.click();
-        webDriver.findElement(By.cssSelector(".ps-popup > p:nth-child(3) > label:nth-child(1) > input:nth-child(1)")).click();
-        musik = webDriver.findElement(By.cssSelector("button.icon:nth-child(2)"));
-        musik.click();
+		musik.click();
+		webDriver.findElement(By.cssSelector(".ps-popup > p:nth-child(3) > label:nth-child(1) > input:nth-child(1)"))
+				.click();
+		musik = webDriver.findElement(By.cssSelector("button.icon:nth-child(2)"));
+		musik.click();
+	}
+
+	public void gotToMainMenue() {
+		WebDriver webDriver = webClient.getDriver();
+
+		sleep(500);
+
+		WebElement mainmenue = webDriver.findElement(By.cssSelector(
+				"body > div.ps-room.ps-room-opaque.tiny-layout > div.battle-controls > div > p:nth-child(2) > em > button:nth-child(1)"));
+		mainmenue.click();
 	}
 }

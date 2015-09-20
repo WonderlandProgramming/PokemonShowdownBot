@@ -4,7 +4,7 @@ import com.wonderland.general.Pokemon;
 
 public class BattlePokemon extends Pokemon {
 	
-	private double hp;
+	private double currentHP;
 	private String status;
 	private String ability;
 	private boolean fainted = false;
@@ -13,12 +13,16 @@ public class BattlePokemon extends Pokemon {
 		super(null, name, null);
 	}
 	
-	public double getHp() {
-		return hp;
+	public void setCurHP(double currentPercent){
+		currentHP = currentPercent;
 	}
-
-	public void setHp(double hp) {
-		this.hp = hp;
+	
+	public double getCurrentHP() {
+		return currentHP;
+	}
+	
+	public String getAbility() {
+		return ability;
 	}
 
 	public String getStatus() {
@@ -31,8 +35,7 @@ public class BattlePokemon extends Pokemon {
 
 	@Override
 	public String toString() {
-		return "BattlePokemon [hp=" + hp + ", status=" + status + ", ability=" + ability + ", boost=" + boost
-				+ ", name=" + name + ", item=" + item + "]";
+		return "BattlePokemon [name=" + name + ", item=" + item + "]";
 	}
 
 	public void fainted(){

@@ -33,6 +33,8 @@ public class WebCalculator {
 		sleep(150);
 		teamsave.click();
 
+		sleep(1500);
+		
 		Alert alert = calculator.switchTo().alert();
 		sleep(150);
 		alert.accept();

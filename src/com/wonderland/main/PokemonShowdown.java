@@ -10,8 +10,7 @@ import com.wonderland.connector.PrepageConnector;
 import com.wonderland.connector.Selenium;
 
 public class PokemonShowdown {
-
-	public static void main(String[] args) {
+	public PokemonShowdown(){
 		Config config = new Config("config.json");
 
 		WebCalculator calculator = new WebCalculator(config);
@@ -25,27 +24,35 @@ public class PokemonShowdown {
 
 		if (prePage.findABattle()) {
 			// Active Battle
+			sleep(500);
+			
 			System.out.println("Found Game!");
 			
 
 			Battlefield battlefield = new Battlefield();
 
-			ChatConnector chat = new ChatConnector(webEngine);
-			BattleConnector battlePage = new BattleConnector(calculator, webEngine, chat, battlefield);
+			BattleConnector battlePage = new BattleConnector(calculator, webEngine, battlefield);
 
 			
 			// setup battlefield active pokemon
 			battlePage.startBattle(config.getBattleTeam());
+			
+			sleep(500);
 
+			ChatConnector chat = new ChatConnector(webEngine);
 
 			boolean ingame = true;
 
 			while (ingame) {
 				
+				chat.print("Das wird nicht abgeschickt ... hoffe ich :D");
+				
 				sleep(500);
 				
 				// check Win Loose enemy surrender etc!
 				if (battlePage.hasEnded()) {
+					
+					System.out.println("Game has ended");
 					ingame = false;
 					break;
 				}
@@ -93,16 +100,20 @@ public class PokemonShowdown {
 				// Wait for turn to end
 				sleep(15000);
 			}
+			
+			prePage.gotToMainMenue();
+			
 		}
 
 		webEngine.closeConnection();
 		calculator.close();
 	}
-
-	public static void main1(String[] args) {
-		Config config = new Config("config.json");
-		System.out.println(Arrays.toString(config.getBattleTeam()));
+	
+	
+	public static void main(String[] args) {
+		new PokemonShowdown();
 	}
+
 
 	public static void sleep(long milis) {
 		try {
