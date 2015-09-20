@@ -1,7 +1,6 @@
 package com.wonderland.battle.ai;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Random;
 
 import com.wonderland.battle.BattlePokemon;
