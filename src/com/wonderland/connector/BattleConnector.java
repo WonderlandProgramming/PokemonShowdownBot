@@ -147,7 +147,7 @@ public class BattleConnector {
 
 	public void updatePokemon() {
 		// TODO Auto-generated method stub
-
+		System.out.println(calculator.getMoveTypeAndOpponentsType(battlefield.getMyActivePokemon(), battlefield.getEnemyActivePokemon()));
 		// hp
 		// boost
 		// hp/100

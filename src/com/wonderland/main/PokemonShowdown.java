@@ -78,6 +78,9 @@ public class PokemonShowdown {
 				sleep(500);
 				//Let the ai move the best turn, it will return Enum MOVE, CHANGE and a string for the move
 				//setup the possible moves list
+				
+				sleep(20000);
+				
 				//AI.move(battlefield)
 
 				sleep(500);
@@ -88,7 +91,7 @@ public class PokemonShowdown {
 				
 				
 				// Wait for turn to end
-				sleep(20000);
+				sleep(15000);
 			}
 		}
 
