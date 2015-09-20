@@ -22,9 +22,11 @@ public class BattleConnector {
 	
 	private Battlefield battlefield;
 
-	public BattleConnector(WebCalculator calculator, Selenium pkmnShowdown) {
+	public BattleConnector(WebCalculator calculator, Selenium pkmnShowdown, ChatConnector chat, Battlefield battlefield) {
 		this.calculator = calculator;
 		this.selenium = pkmnShowdown;
+		this.chat = chat;
+		this.battlefield = battlefield;
 	}
 
 	private void pickStarter(WebDriver page) {
@@ -44,8 +46,6 @@ public class BattleConnector {
 		WebDriver pageDirect = selenium.getDriver();
 
 		sleep(10000);
-
-		battlefield = new Battlefield();
 
 		String oppTeam = pageDirect
 				.findElement(By.cssSelector(
@@ -70,8 +70,6 @@ public class BattleConnector {
 			sleep(5000);
 		}
 
-		this.chat = new ChatConnector(selenium);
-
 		// chat.println("TestText");
 
 		sleep(15000);
@@ -90,7 +88,7 @@ public class BattleConnector {
 		return possibleMoves;
 	}
 
-	private boolean waitingForOpponent() {
+	public boolean waitingForOpponent() {
 		WebDriver pageDirect = selenium.getDriver();
 		try {
 			WebElement waiting = pageDirect.findElement(By.cssSelector(".controls > p:nth-child(1) > em:nth-child(1)"));
@@ -124,5 +122,30 @@ public class BattleConnector {
 
 	public void forfeit() {
 		chat.println("/forfeit");
+	}
+
+	public boolean hasEnded() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public boolean currentPokemonFainted() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public void updatePokemon() {
+		// TODO Auto-generated method stub
+		
+		
+		//hp
+		//boost
+		//hp/100
+		//name
+	}
+
+	public void tryMegaEvolve() {
+		// TODO Auto-generated method stub
+		
 	}
 }
