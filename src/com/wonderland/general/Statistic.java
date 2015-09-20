@@ -5,7 +5,7 @@ package com.wonderland.general;
  * 
  * @author Lukas Peer, Lukas Kannenberg
  * @since 20-09-2015
- * @version 20-09-2015 15:54
+ * @version 20-09-2015 16:22
  *
  */
 public class Statistic {

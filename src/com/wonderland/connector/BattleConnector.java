@@ -138,7 +138,7 @@ public class BattleConnector {
 
 	public void updatePokemon() {
 
-		sleep(8000);
+		sleep(10000);
 
 		String myId = getMySearchText();
 		String oppId = getOpponentsSearchText();
@@ -150,12 +150,12 @@ public class BattleConnector {
 
 		BattlePokemon myPokemon = battlefield.getMyActivePokemon();
 
-		myPokemon.setCurHP(getHealth(myId));
+		myPokemon.setCurHp(getHealth(myId));
 		myPokemon.setItem(getItem(myId));
 		myPokemon.setBoost(getMyBoosts());
 
 		BattlePokemon oppPokemon = battlefield.getOppActivePokemon();
-		oppPokemon.setCurHP(getHealth(oppId));
+		oppPokemon.setCurHp(getHealth(oppId));
 		oppPokemon.setItem(getItem(oppId));
 		oppPokemon.setBoost(getOppBoosts());
 
@@ -186,16 +186,11 @@ public class BattleConnector {
 
 	private String getMySearchText() {
 		WebDriver webDriver = selenium.getDriver();
-
-		List<WebElement> allElements = webDriver.findElements(By.className("innerbattle"));
-		for (WebElement webElement : allElements) {
-			System.out.println(webElement);
-		}
 		
 		Actions action = new Actions(webDriver);
 		WebElement me = webDriver.findElement(By.cssSelector("div.ps-room:nth-child(47) > div:nth-child(2) > div:nth-child(2)"));
 		
-		System.err.println(me);
+		
 		
 		action.moveToElement(me).perform();
 

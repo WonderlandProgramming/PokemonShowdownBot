@@ -8,7 +8,7 @@ import java.util.List;
  * 
  * @author Lukas Peer, Lukas Kannenberg
  * @since 20-09-2015
- * @version 20-09-2015 15:54
+ * @version 20-09-2015 16:21
  *
  */
 public class Moveset {

@@ -36,14 +36,14 @@ public class BattlePokemon extends Pokemon {
 	/**
 	 * @return the health
 	 */
-	public double getHp() {
+	public double getCurHp() {
 		return hp;
 	}
 
 	/**
 	 * @param hp the health value to set
 	 */
-	public void setHp(double hp) {
+	public void setCurHp(double hp) {
 		this.hp = hp;
 	}
 
