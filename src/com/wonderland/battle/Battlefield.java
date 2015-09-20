@@ -62,7 +62,7 @@ public class Battlefield {
 	 */
 	public void setMyActivePokemon(String name) {
 		for (BattlePokemon battlePokemon : myTeam) {
-			if(battlePokemon.getName().equals(name)) {
+			if(battlePokemon.getName().equalsIgnoreCase(name)) {
 				this.myActivePokemon = name;
 				return;
 			}
@@ -81,7 +81,7 @@ public class Battlefield {
 	 */
 	public BattlePokemon getOppActivePokemon() {
 		for (BattlePokemon battlePokemon : oppTeam) {
-			if(battlePokemon.getName().equals(oppActivePokemon)) {
+			if(battlePokemon.getName().equalsIgnoreCase(oppActivePokemon)) {
 				return battlePokemon;
 			}
 		}
