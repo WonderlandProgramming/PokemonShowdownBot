@@ -10,11 +10,11 @@ import com.wonderland.general.Pokemon;
 
 public class Battlefield {
 	
-	private Pokemon myActivePokemon;
-	private Pokemon enemyActivePokemon;
+	private BattlePokemon myActivePokemon;
+	private BattlePokemon enemyActivePokemon;
 
-	private ArrayList<Pokemon> myTeam = new ArrayList<>();
-	private ArrayList<Pokemon> oppTeam = new ArrayList<>();
+	private ArrayList<BattlePokemon> myTeam = new ArrayList<>();
+	private ArrayList<BattlePokemon> oppTeam = new ArrayList<>();
 
 	private HashMap<HazardType, Hazard> myHazards = new HashMap<>();
 	private HashMap<HazardType, Hazard> oppHazards = new HashMap<>();
@@ -30,11 +30,11 @@ public class Battlefield {
 	 * @param oppTeam
 	 *            the opponents team
 	 */
-	public void initializeTeams(Pokemon[] myTeam, Pokemon[] oppTeam) {
-		for (Pokemon pokemon : myTeam) {
+	public void initializeTeams(BattlePokemon[] myTeam, BattlePokemon[] oppTeam) {
+		for (BattlePokemon pokemon : myTeam) {
 			this.myTeam.add(pokemon);
 		}
-		for (Pokemon pokemon : oppTeam) {
+		for (BattlePokemon pokemon : oppTeam) {
 			this.oppTeam.add(pokemon);
 		}
 	}
@@ -42,35 +42,35 @@ public class Battlefield {
 	/**
 	 * @return my active Pokemon
 	 */
-	public Pokemon getMyActivePokemon() {
+	public BattlePokemon getMyActivePokemon() {
 		return myActivePokemon;
 	}
 
 	/**
 	 * @param myActivePokemon my active Pokemon to set
 	 */
-	public void setMyActivePokemon(Pokemon myActivePokemon) {
+	public void setMyActivePokemon(BattlePokemon myActivePokemon) {
 		this.myActivePokemon = myActivePokemon;
 	}
 
 	/**
 	 * @return the enemy active Pokemon
 	 */
-	public Pokemon getEnemyActivePokemon() {
+	public BattlePokemon getEnemyActivePokemon() {
 		return enemyActivePokemon;
 	}
 
 	/**
 	 * @param enemyActivePokemon the enemy active Pokemon to set
 	 */
-	public void setEnemyActivePokemon(Pokemon enemyActivePokemon) {
+	public void setEnemyActivePokemon(BattlePokemon enemyActivePokemon) {
 		this.enemyActivePokemon = enemyActivePokemon;
 	}
 
 	/**
 	 * @return your Team including all Pokemon
 	 */
-	public List<Pokemon> getMyTeam() {
+	public List<BattlePokemon> getMyTeam() {
 		return myTeam;
 	}
 
@@ -79,7 +79,7 @@ public class Battlefield {
 	 *            the position
 	 * @return the Pokemon at the specified position
 	 */
-	public Pokemon getMyTeamPokemon(Pokemon pokemon) {
+	public BattlePokemon getMyTeamPokemon(BattlePokemon pokemon) {
 		if (myTeam.contains(pokemon)) {
 			return myTeam.get(myTeam.indexOf(pokemon));
 		}
@@ -89,7 +89,7 @@ public class Battlefield {
 	/**
 	 * @return the opponents Team including all Pokemon
 	 */
-	public List<Pokemon> getOppTeam() {
+	public List<BattlePokemon> getOppTeam() {
 		return oppTeam;
 	}
 	
@@ -98,7 +98,7 @@ public class Battlefield {
 	 *            the position
 	 * @return the Pokemon at the specified position
 	 */
-	public Pokemon getOppTeamPokemon(Pokemon pokemon) {
+	public BattlePokemon getOppTeamPokemon(BattlePokemon pokemon) {
 		if (oppTeam.contains(pokemon)) {
 			return oppTeam.get(oppTeam.indexOf(pokemon));
 		}

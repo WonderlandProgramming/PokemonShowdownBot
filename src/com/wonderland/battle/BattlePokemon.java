@@ -35,6 +35,12 @@ public class BattlePokemon extends Pokemon {
 				+ ", name=" + name + ", item=" + item + "]";
 	}
 
-
+	public void fainted(){
+		fainted = true;
+	}
+	
+	public boolean isFainted(){
+		return fainted;
+	}
 
 }

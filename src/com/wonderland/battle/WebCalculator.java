@@ -92,14 +92,23 @@ public class WebCalculator {
 		}
 
 		excludeIntimidate();
-		
+
 		Properties rt = new Properties();
 		rt.put("myDamage", myDamage);
 		rt.put("oppDamage", oppDamage);
-		
+
 		return rt;
 	}
 
+	/**
+	 * Sets the webcalculator for your {@link Pokemon} and the enemy
+	 * {@link Pokemon}.
+	 * 
+	 * @param myPokemonRaw
+	 *            Your Pokemon
+	 * @param enemyPokemonRaw
+	 *            Opponents Pokemon
+	 */
 	public void setPokemon(Pokemon myPokemonRaw, Pokemon enemyPokemonRaw) {
 		String myPokemon = myPokemonRaw.getName().replace("-Resolute", "").trim();
 		String opponentsPokemon = enemyPokemonRaw.getName().replace("-Resolute", "").trim();
@@ -130,7 +139,47 @@ public class WebCalculator {
 		}
 
 		if (enemyPokemonRaw.equals(lastTurnOpponent)) {
-			//TODO
+			WebElement opponentControl = calculator.findElement(By.cssSelector("#s2id_autogen3 > a:nth-child(1)"));
+			opponentControl.click();
+			WebElement opponentText = calculator
+					.findElement(By.cssSelector("#select2-drop > div:nth-child(1) > input:nth-child(1)"));
+			opponentText.sendKeys(opponentsPokemon);
+
+			WebElement opponentResults = calculator.findElement(By.cssSelector("#select2-drop > ul:nth-child(2)"));
+			List<WebElement> oppresults = opponentResults.findElements(By.tagName("li"));
+			boolean hasOuSet = false;
+			WebElement tempresult = null;
+			boolean skipfirst = true;
+
+			for (WebElement result : oppresults) {
+				if (skipfirst) {
+					skipfirst = false;
+					continue;
+				}
+				if (result.getText().contains("OU")) {
+					tempresult = result;
+					hasOuSet = true;
+					break;
+				} else {
+					if (!hasOuSet && tempresult == null) {
+						tempresult = result;
+					}
+				}
+			}
+
+			if (tempresult != null) {
+				tempresult.click();
+			}
+			setBoosts(2, enemyPokemonRaw.getBoost());
+			lastTurnOpponent = enemyPokemonRaw;
+
+			excludeIntimidate();
+
+			if (enemyPokemonRaw.getItem() != null) {
+				Select select = new Select(calculator.findElement(
+						By.cssSelector("#p2 > div:nth-child(6) > div:nth-child(3) > select:nth-child(2)")));
+				select.selectByValue(enemyPokemonRaw.getItem().trim());
+			}
 		}
 	}
 
@@ -175,8 +224,21 @@ public class WebCalculator {
 		}
 	}
 
-	public String[] getMoveTypeAndOpponentsType(String me, String opp) {
-		setPokemon(new Pokemon(me), new Pokemon(opp));
+	/**
+	 * This will setup your and the enemy {@link Pokemon} in the
+	 * {@link WebCalculator}. Furthermore it will give you information on the
+	 * type of attacks and the enemy {@link Pokemon}.
+	 * 
+	 * @param me
+	 *            Your Pokemon
+	 * @param opp
+	 *            Enemy Pokemon
+	 * @return Return an array of {@link String} in the following order: <br>
+	 *         <b>
+	 *         <code>  type1, type2, type3, type4, opptype1, opptype2 </code>
+	 */
+	public String[] getMoveTypeAndOpponentsType(Pokemon me, Pokemon opp) {
+		setPokemon(me, opp);
 
 		String type1 = getSelectedOption(
 				new Select(calculator.findElement(By.cssSelector("#p1 > div:nth-child(8) > select:nth-child(4)"))))
@@ -205,7 +267,15 @@ public class WebCalculator {
 		this.setPokemon(new Pokemon(null, me, null), new Pokemon(null, opp, null));
 	}
 
-	public int[] getSpeedStats(String me, String opp) {
+	/**
+	 * This method will give you two ints which represent the Speed of you and the enemy {@link Pokemon}
+	 * @param me My Pokemon
+	 * @param opp Opponents Pokemon
+	 * @return Return an array of {@link Integer} in the following order: <br>
+	 *         <b>
+	 *         <code> myPokemonSpeed, oppPokemonSpeed </code>
+	 */
+	public int[] getSpeedStats(Pokemon me, Pokemon opp) {
 		setPokemon(me, opp);
 
 		int mySpeed = Integer.parseInt(calculator
@@ -217,7 +287,7 @@ public class WebCalculator {
 						"#p2 > div:nth-child(5) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(8) > td:nth-child(6) > span:nth-child(1)"))
 				.getText());
 
-		if (SpecialPokemon.scarfers.contains(SpecialPokemon.changeName(me))) {
+		if (me.getItem() == "Choice Scarf") {
 			mySpeed = (int) (mySpeed * 1.5);
 		}
 

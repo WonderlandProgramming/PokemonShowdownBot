@@ -19,10 +19,11 @@ public class BattleConnector {
 	private Selenium selenium;
 
 	private ChatConnector chat;
-	
+
 	private Battlefield battlefield;
 
-	public BattleConnector(WebCalculator calculator, Selenium pkmnShowdown, ChatConnector chat, Battlefield battlefield) {
+	public BattleConnector(WebCalculator calculator, Selenium pkmnShowdown, ChatConnector chat,
+			Battlefield battlefield) {
 		this.calculator = calculator;
 		this.selenium = pkmnShowdown;
 		this.chat = chat;
@@ -51,19 +52,20 @@ public class BattleConnector {
 				.findElement(By.cssSelector(
 						"body > div.ps-room.ps-room-opaque > div.battle-log > div.inner > div:nth-child(15) > em"))
 				.getText();
-		
+
 		String[] oppTeamArray = oppTeam.split(" \\/ ");
 
-		BattlePokemon[] oppPkmnTeam = { new BattlePokemon(oppTeamArray[0]), new BattlePokemon(oppTeamArray[1]), new BattlePokemon(oppTeamArray[2]),
-				new BattlePokemon(oppTeamArray[3]), new BattlePokemon(oppTeamArray[4]), new BattlePokemon(oppTeamArray[5]) };
+		BattlePokemon[] oppPkmnTeam = { new BattlePokemon(oppTeamArray[0]), new BattlePokemon(oppTeamArray[1]),
+				new BattlePokemon(oppTeamArray[2]), new BattlePokemon(oppTeamArray[3]),
+				new BattlePokemon(oppTeamArray[4]), new BattlePokemon(oppTeamArray[5]) };
 
 		System.out.println("My Team: " + Arrays.toString(myTeam));
 		System.out.println("Opp Team: " + Arrays.toString(oppTeamArray));
-		
+
 		battlefield.initializeTeams(myTeam, oppPkmnTeam);
-		
+
 		sleep(5000);
-		
+
 		pickStarter(pageDirect);
 
 		while (waitingForOpponent()) {
@@ -73,7 +75,7 @@ public class BattleConnector {
 		// chat.println("TestText");
 
 		sleep(15000);
-		
+
 		forfeit();
 
 	}
@@ -117,7 +119,7 @@ public class BattleConnector {
 		//
 		// gegnerisches Team
 		return 0;
-		//return new Random().nextInt(6);
+		// return new Random().nextInt(6);
 	}
 
 	public void forfeit() {
@@ -130,22 +132,43 @@ public class BattleConnector {
 	}
 
 	public boolean currentPokemonFainted() {
-		// TODO Auto-generated method stub
+		WebDriver webDriver = selenium.getDriver();
+		try {
+			WebElement whatDo = webDriver.findElement(By.cssSelector(".whatdo"));
+			if (whatDo.getText().contains("Switch")) {
+				System.out.println("pickPokemonifDefeated");
+				return true;
+			}
+		} catch (Exception e) {
+
+		}
 		return false;
 	}
 
 	public void updatePokemon() {
 		// TODO Auto-generated method stub
-		
-		
-		//hp
-		//boost
-		//hp/100
-		//name
+
+		// hp
+		// boost
+		// hp/100
+		// name
 	}
 
 	public void tryMegaEvolve() {
-		// TODO Auto-generated method stub
-		
+		WebDriver pageDirect = selenium.getDriver();
+		try {
+			pageDirect.findElement(By.cssSelector(".movemenu > label:nth-child(6) > input:nth-child(1)")).click();
+		} catch (Exception e) {
+		}
+	}
+
+	public void swapIn(int PokemonSlotID) {
+		WebDriver webDriver = selenium.getDriver();
+		WebElement pokemon = webDriver.findElement(By.cssSelector(".switchmenu > button:nth-child(" + PokemonSlotID + ")"));
+		if (pokemon.getAttribute("class").equals("disabled")) {
+			System.err.println("Can not swap in disabled Pokemon!");
+		} else {
+			pokemon.click();
+		}
 	}
 }

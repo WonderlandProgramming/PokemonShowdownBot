@@ -154,4 +154,14 @@ public class PrepageConnector {
 			e.printStackTrace();
 		}
 	}
+
+	public void disableMusic() {
+		WebDriver webDriver = webClient.getDriver();
+
+		WebElement musik = webDriver.findElement(By.cssSelector("button.icon:nth-child(2)"));
+        musik.click();
+        webDriver.findElement(By.cssSelector(".ps-popup > p:nth-child(3) > label:nth-child(1) > input:nth-child(1)")).click();
+        musik = webDriver.findElement(By.cssSelector("button.icon:nth-child(2)"));
+        musik.click();
+	}
 }

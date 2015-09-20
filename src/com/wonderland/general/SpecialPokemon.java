@@ -2,7 +2,6 @@ package com.wonderland.general;
 
 public class SpecialPokemon {
 	public static String[] magicBounce = { "Natu", "Xatu", "Espeon", "Sableye", "Absol", "Diancie" };
-	public static String scarfers; // just own team need to setup!
 
 	public static String changeName(String poke) {
 		switch (poke) {

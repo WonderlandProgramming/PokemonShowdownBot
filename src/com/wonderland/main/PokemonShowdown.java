@@ -21,6 +21,7 @@ public class PokemonShowdown {
 
 		prePage.login(config);
 		prePage.loadTeam(config.getTeam());
+		prePage.disableMusic();
 
 		if (prePage.findABattle()) {
 			// Active Battle
@@ -40,33 +41,46 @@ public class PokemonShowdown {
 			boolean ingame = true;
 
 			while (ingame) {
-
+				
+				sleep(500);
+				
 				// check Win Loose enemy surrender etc!
 				if (battlePage.hasEnded()) {
 					ingame = false;
 					break;
 				}
 				
+				sleep(500);
+				
 				// Check if pokemon fainted
 				if(battlePage.currentPokemonFainted()){
-					//battlefield.updatePokemon(fainted = true);
-					//AI.pickPokemon();
+					battlefield.getMyActivePokemon().fainted();
+					
+					sleep(500);
+					
+					int pokemonID = 0; // = AI.pickPokemon();
+					battlePage.swapIn(pokemonID);
 				}
 
+				sleep(500);
+				
 				// Update enemy
 				// update own
-
 				battlePage.updatePokemon();
 				
+				sleep(500);
+		
 				// wenn mega evo dann anklicken
-				//auﬂerdem pokemon updaten das es mega ist!
+				//auﬂerdem pokemon updaten das es mega ist!		
 				battlePage.tryMegaEvolve();
 				
 				
+				sleep(500);
 				//Let the ai move the best turn, it will return Enum MOVE, CHANGE and a string for the move
 				//setup the possible moves list
 				//AI.move(battlefield)
 
+				sleep(500);
 				// Wait for enemy reaction
 				while (battlePage.waitingForOpponent()) {
 					sleep(1000);
