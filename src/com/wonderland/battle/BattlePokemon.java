@@ -7,6 +7,7 @@ public class BattlePokemon extends Pokemon {
 	private double hp;
 	private String status;
 	private String ability;
+	private boolean fainted = false;
 
 	public BattlePokemon(String name) {
 		super(null, name, null);

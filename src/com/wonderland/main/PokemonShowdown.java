@@ -26,6 +26,18 @@ public class PokemonShowdown {
 			System.out.println("Found Game!");
 
 			battlePage.startBattle(config.getBattleTeam());
+			
+			//setup battlefield active pokemon
+			
+			//Loop
+			//  check Win Loose#
+			//	Check if pokemon fainted
+			//	Update enemy
+			// 	update own
+			//	ai movements
+			// 	wenn mega evo dann anklicken
+			//	wait for reaction
+			//	wait for turn to end
 		}
 		
 		webEngine.closeConnection();
