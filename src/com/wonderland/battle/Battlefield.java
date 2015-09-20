@@ -87,6 +87,13 @@ public class Battlefield {
 	}
 
 	/**
+	 * @return the opponents Team including all Pokemon
+	 */
+	public List<Pokemon> getOppTeam() {
+		return oppTeam;
+	}
+	
+	/**
 	 * @param position
 	 *            the position
 	 * @return the Pokemon at the specified position
@@ -96,13 +103,6 @@ public class Battlefield {
 			return oppTeam.get(oppTeam.indexOf(pokemon));
 		}
 		return null;
-	}
-
-	/**
-	 * @return the opponents Team including all Pokemon
-	 */
-	public List<Pokemon> getOppTeam() {
-		return oppTeam;
 	}
 
 	/**
