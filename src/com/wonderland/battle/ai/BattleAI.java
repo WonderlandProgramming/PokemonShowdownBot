@@ -35,7 +35,7 @@ public class BattleAI {
 	 * @return a number representing an intelligent starter Pokemon
 	 */
 	public int pickIntelligentStarter() {
-		BattlePokemon[] pokemons = battlefield.getMyTeam().toArray(new BattlePokemon[0]);
+		BattlePokemon[] pokemons = battlefield.getMyTeam().toArray(new BattlePokemon[battlefield.getMyTeam().size()]);
 		int[] values = new int[pokemons.length];
 		if (pokemons.length != 0) {
 			return -1;

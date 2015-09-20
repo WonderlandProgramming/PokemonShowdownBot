@@ -64,7 +64,7 @@ public class BattleConnector {
 
 		battlefield.initializeTeams(myTeam, oppPkmnTeam);
 
-		sleep(500);
+		sleep(2500);
 
 		pickStarter(pageDirect, ai);
 
