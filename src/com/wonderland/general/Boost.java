@@ -71,4 +71,9 @@ public class Boost {
 		}
 		return "1,0";
 	}
+
+	@Override
+	public String toString() {
+		return "Boost [type=" + type + ", text=" + text + "]";
+	}
 }

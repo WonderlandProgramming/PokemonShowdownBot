@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.bcel.classfile.PMGClass;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -12,6 +13,7 @@ import org.openqa.selenium.interactions.Actions;
 import com.wonderland.battle.BattlePokemon;
 import com.wonderland.battle.Battlefield;
 import com.wonderland.battle.WebCalculator;
+import com.wonderland.battle.ai.BattleAI;
 import com.wonderland.general.Boost;
 import com.wonderland.general.SpecialPokemon;
 
@@ -28,10 +30,10 @@ public class BattleConnector {
 		this.battlefield = battlefield;
 	}
 
-	private void pickStarter(WebDriver page) {
+	private void pickStarter(WebDriver page, BattleAI ai) {
 		try {
 			WebElement starter = page
-					.findElement(By.cssSelector(".switchmenu > button:nth-child(" + pickLeadPokemon() + ")"));
+					.findElement(By.cssSelector(".switchmenu > button:nth-child(" + ai.pickRandomStarter() + ")"));
 			System.out.println("Choosen Starter is: " + starter.getText());
 			starter.click();
 		} catch (Exception e) {
@@ -41,7 +43,7 @@ public class BattleConnector {
 
 	}
 
-	public void startBattle(BattlePokemon[] myTeam) {
+	public void startBattle(BattlePokemon[] myTeam, BattleAI ai) {
 		WebDriver pageDirect = selenium.getDriver();
 
 		sleep(2500);
@@ -64,7 +66,7 @@ public class BattleConnector {
 
 		sleep(500);
 
-		pickStarter(pageDirect);
+		pickStarter(pageDirect, ai);
 
 		while (waitingForOpponent() && !hasEnded()) {
 			sleep(5000);
@@ -103,10 +105,6 @@ public class BattleConnector {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public int pickLeadPokemon() {
-		return 1;
 	}
 
 	public boolean hasEnded() {
@@ -278,10 +276,19 @@ public class BattleConnector {
 		return boosts;
 	}
 
-	public void waitForTurn(int thisturn) {
+	public void waitForTurn(int thisturn, boolean ingame, BattleAI ai) {
 		WebDriver webDriver = selenium.getDriver();
 		while (true) {
 			try {
+				if(this.hasEnded()){
+					ingame = false;
+					break;
+				}
+				
+				if(currentPokemonFainted()){
+					this.swapIn(ai.pickRandomStarter());
+				}
+				
 				WebElement turn = webDriver.findElement(By
 						.cssSelector("body > div.ps-room.ps-room-opaque > div.battle > div > div:nth-child(9) > div"));
 				String turnNumber = turn.getText().substring(5);
@@ -304,14 +311,13 @@ public class BattleConnector {
 			if(chatLine.contains("fainted")){
 				if(chatLine.startsWith("The opposing")){
 					String pkmn = chatLine.substring(12, chatLine.indexOf("fainted") - 1).trim();
-					BattlePokemon fainted = null;
+					BattlePokemon fainted = battlefield.getOppTeamPokemon(SpecialPokemon.changeName(pkmn));
 					fainted.fainted();
 				}else{
 					String pkmn = chatLine.substring(0, chatLine.indexOf("fainted") - 1).trim();
-					BattlePokemon fainted = null;
+					BattlePokemon fainted = battlefield.getMyTeamPokemon(SpecialPokemon.changeName(pkmn));
 					fainted.fainted();
 				}
-				System.out.println(chatLine);
 			}
 		}
 	}

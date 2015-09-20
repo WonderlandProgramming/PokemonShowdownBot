@@ -89,7 +89,7 @@ public class PrepageConnector {
 	public void login(String username, String password) {
 		WebDriver browserdirect = webClient.getDriver();
 
-		sleep(500);
+		sleep(800);
 
 		WebElement login = browserdirect.findElement(By.name("login"));
 		login.click();

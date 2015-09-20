@@ -10,7 +10,7 @@ package com.wonderland.battle;
  */
 public class BattleOption {
 	
-	private BattleOption option;
+	private BattleOptionType option;
 	private String name;
 	
 	/**
@@ -26,7 +26,7 @@ public class BattleOption {
 	 * @param option the battle option
 	 * @param name the name
 	 */
-	public BattleOption(BattleOption option, String name) {
+	public BattleOption(BattleOptionType option, String name) {
 		setOption(option);
 		setName(name);
 	}
@@ -34,14 +34,14 @@ public class BattleOption {
 	/**
 	 * @return the option
 	 */
-	public BattleOption getOption() {
+	public BattleOptionType getOption() {
 		return option;
 	}
 
 	/**
 	 * @param option the option to set
 	 */
-	public void setOption(BattleOption option) {
+	public void setOption(BattleOptionType option) {
 		this.option = option;
 	}
 
@@ -58,5 +58,9 @@ public class BattleOption {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "BattleOption [option=" + option + ", name=" + name + "]";
+	}
 }
