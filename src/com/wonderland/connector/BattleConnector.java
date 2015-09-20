@@ -36,41 +36,34 @@ public class BattleConnector {
 			starter.click();
 		} catch (Exception e) {
 			System.out.println("Error picking pick manual pls");
-			System.out.println(e.getMessage());
 			sleep(10000);
 		}
 
 	}
 
-	public void startBattle() {
+	public void startBattle(BattlePokemon[] myTeam) {
 		WebDriver pageDirect = selenium.getDriver();
 
 		sleep(10000);
 
 		battlefield = new Battlefield();
 
-		String myTeam = pageDirect
-				.findElement(By.cssSelector(
-						"body > div.ps-room.ps-room-opaque > div.battle-log > div.inner > div:nth-child(13) > em"))
-				.getText();
 		String oppTeam = pageDirect
 				.findElement(By.cssSelector(
-						"body > div.ps-room.ps-room-opaque > div.battle-log > div.inner > div:nth-child(14) > em"))
+						"body > div.ps-room.ps-room-opaque > div.battle-log > div.inner > div:nth-child(15) > em"))
 				.getText();
-
-		String[] myTeamArray = myTeam.split(" \\/ ");
+		
 		String[] oppTeamArray = oppTeam.split(" \\/ ");
 
-		BattlePokemon[] myPkmnTeam = { new BattlePokemon(myTeamArray[0]), new BattlePokemon(myTeamArray[1]), new BattlePokemon(myTeamArray[2]),
-				new BattlePokemon(myTeamArray[3]), new BattlePokemon(myTeamArray[4]), new BattlePokemon(myTeamArray[5]) };
-		
 		BattlePokemon[] oppPkmnTeam = { new BattlePokemon(oppTeamArray[0]), new BattlePokemon(oppTeamArray[1]), new BattlePokemon(oppTeamArray[2]),
 				new BattlePokemon(oppTeamArray[3]), new BattlePokemon(oppTeamArray[4]), new BattlePokemon(oppTeamArray[5]) };
 
-		System.out.println("My Team: " + Arrays.toString(myTeamArray));
+		System.out.println("My Team: " + Arrays.toString(myTeam));
 		System.out.println("Opp Team: " + Arrays.toString(oppTeamArray));
 		
-		battlefield.initializeTeams(myPkmnTeam, oppPkmnTeam);
+		battlefield.initializeTeams(myTeam, oppPkmnTeam);
+		
+		sleep(5000);
 		
 		pickStarter(pageDirect);
 
@@ -83,6 +76,8 @@ public class BattleConnector {
 		// chat.println("TestText");
 
 		sleep(15000);
+		
+		forfeit();
 
 	}
 
@@ -124,8 +119,8 @@ public class BattleConnector {
 	public int pickLeadPokemon() {
 		//
 		// gegnerisches Team
-
-		return new Random().nextInt(6);
+		return 0;
+		//return new Random().nextInt(6);
 	}
 
 	public void forfeit() {

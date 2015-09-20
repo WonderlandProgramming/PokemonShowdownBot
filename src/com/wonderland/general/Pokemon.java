@@ -3,9 +3,9 @@ package com.wonderland.general;
 import java.util.List;
 
 public class Pokemon {
-	private List<Boost> boost;	
-	private String name;
-	private String item;
+	protected List<Boost> boost;	
+	protected String name;
+	protected String item;
 	
 	public Pokemon(List<Boost> boost, String name, String item) {
 		this.boost = boost;

@@ -7,7 +7,7 @@ public class BattlePokemon extends Pokemon {
 	private double hp;
 	private String status;
 	private String ability;
-	
+
 	public BattlePokemon(String name) {
 		super(null, name, null);
 	}
@@ -27,5 +27,13 @@ public class BattlePokemon extends Pokemon {
 	public void setStatus(String status) {
 		this.status = status;
 	}
+
+	@Override
+	public String toString() {
+		return "BattlePokemon [hp=" + hp + ", status=" + status + ", ability=" + ability + ", boost=" + boost
+				+ ", name=" + name + ", item=" + item + "]";
+	}
+
+
 
 }

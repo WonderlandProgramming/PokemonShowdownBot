@@ -48,7 +48,7 @@ public class PrepageConnector {
 		format.click();
 		format.sendKeys("o");
 		format.click();
-		
+
 		List<WebElement> home = browserdirect.findElements(By.className("button"));
 		for (WebElement webElement : home) {
 			if (webElement.getText().contains("Home")) {
@@ -56,22 +56,21 @@ public class PrepageConnector {
 				break;
 			}
 		}
-		
+
 		WebElement fightCategory = browserdirect.findElement(By.cssSelector(".formatselect"));
 		fightCategory.click();
 		WebElement ou = browserdirect
 				.findElement(By.cssSelector("ul.popupmenu:nth-child(1) > li:nth-child(4) > button:nth-child(1)"));
 		ou.click();
 	}
-	
 
-	public void login(Config config){
+	public void login(Config config) {
 		login(config.getUser(), config.getPassword());
 	}
 
 	public void login(String username) {
 		username = username.substring(0, 18);
-		
+
 		WebDriver browserdirect = webClient.getDriver();
 		WebElement login = browserdirect.findElement(By.name("login"));
 		login.click();
@@ -80,7 +79,7 @@ public class PrepageConnector {
 		user.sendKeys(username);
 
 		WebElement submit = browserdirect.findElement(By.cssSelector(".buttonbar > button:nth-child(1)"));
-		
+
 		sleep(500);
 		submit.click();
 		sleep(500);
@@ -93,14 +92,17 @@ public class PrepageConnector {
 		WebElement login = browserdirect.findElement(By.name("login"));
 		login.click();
 
-		WebElement user = browserdirect.findElement(By.cssSelector("input.textbox:nth-child(1)"));
+		sleep(500);
+
+		WebElement user = browserdirect
+				.findElement(By.cssSelector("body > div.ps-overlay > div > form > p:nth-child(1) > label > input"));
 		user.sendKeys(username);
 
 		WebElement submit = browserdirect.findElement(By.cssSelector(".buttonbar > button:nth-child(1)"));
 		sleep(500);
 		submit.click();
 
-		if(!password.isEmpty()){
+		if (!password.isEmpty()) {
 			sleep(500);
 			WebElement pass = browserdirect.findElement(By.cssSelector("input.textbox:nth-child(1)"));
 			pass.sendKeys(password);
@@ -132,6 +134,13 @@ public class PrepageConnector {
 					.findElement(By.cssSelector("ul.popupmenu:nth-child(1) > li:nth-child(4) > button:nth-child(1)"));
 			ou.click();
 			lookForABattle.click();
+
+			while (browserdirect
+					.findElement(By.cssSelector(
+							"#mainmenu > div > div.leftmenu > div.mainmenu > div:nth-child(1) > form > p:nth-child(3) > button"))
+					.getText().contains("Searching"))
+				sleep(500);
+
 		} catch (Exception e) {
 			return false;
 		}

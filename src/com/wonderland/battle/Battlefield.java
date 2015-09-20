@@ -7,7 +7,6 @@ import java.util.List;
 import com.wonderland.general.Hazard;
 import com.wonderland.general.HazardType;
 import com.wonderland.general.Pokemon;
-import com.wonderland.general.Weather;
 
 public class Battlefield {
 
