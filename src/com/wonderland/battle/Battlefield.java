@@ -119,6 +119,19 @@ public class Battlefield {
 		}
 		return null;
 	}
+	
+	/**
+	 * @param name the name
+	 * @return the BattlePokemon with specified name if existing
+	 */
+	public BattlePokemon getMyTeamPokemon(String name) {
+		for (BattlePokemon battlePokemon : myTeam) {
+			if (battlePokemon.getName().equalsIgnoreCase(name)) {
+				return battlePokemon;
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * @return the opponents Team including all Pokemon
@@ -135,6 +148,19 @@ public class Battlefield {
 	public BattlePokemon getOppTeamPokemon(BattlePokemon pokemon) {
 		if (oppTeam.contains(pokemon)) {
 			return oppTeam.get(oppTeam.indexOf(pokemon));
+		}
+		return null;
+	}
+	
+	/**
+	 * @param name the name
+	 * @return the BattlePokemon with specified name if existing
+	 */
+	public BattlePokemon getOppTeamPokemon(String name) {
+		for (BattlePokemon battlePokemon : oppTeam) {
+			if (battlePokemon.getName().equalsIgnoreCase(name)) {
+				return battlePokemon;
+			}
 		}
 		return null;
 	}
