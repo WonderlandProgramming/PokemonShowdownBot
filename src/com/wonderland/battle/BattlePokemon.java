@@ -31,6 +31,7 @@ public class BattlePokemon extends Pokemon {
 	 */
 	public BattlePokemon(String name) {
 		super(null, name, null);
+		this.hp = 100.0;
 	}
 	
 	/**

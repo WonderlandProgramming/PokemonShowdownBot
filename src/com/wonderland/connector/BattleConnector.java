@@ -143,24 +143,19 @@ public class BattleConnector {
 		String myId = getMySearchText();
 		String oppId = getOpponentsSearchText();
 
-		System.out.println(getName(myId));
-
-		battlefield.setMyActivePokemon(getName(myId));
-		battlefield.setOppActivePokemon(getName(oppId));
+		battlefield.setMyActivePokemon(SpecialPokemon.changeName(getName(myId)));
+		battlefield.setOppActivePokemon(SpecialPokemon.changeName(getName(oppId)));
 
 		BattlePokemon myPokemon = battlefield.getMyActivePokemon();
+		BattlePokemon oppPokemon = battlefield.getOppActivePokemon();
 
 		myPokemon.setCurHp(getHealth(myId));
 		myPokemon.setItem(getItem(myId));
 		myPokemon.setBoost(getMyBoosts());
 
-		BattlePokemon oppPokemon = battlefield.getOppActivePokemon();
 		oppPokemon.setCurHp(getHealth(oppId));
 		oppPokemon.setItem(getItem(oppId));
 		oppPokemon.setBoost(getOppBoosts());
-
-		System.out.println(calculator.getMoveTypeAndOpponentsType(battlefield.getMyActivePokemon(),
-				battlefield.getOppActivePokemon()));
 
 		System.out.println(battlefield.toString());
 	}
@@ -186,15 +181,16 @@ public class BattleConnector {
 
 	private String getMySearchText() {
 		WebDriver webDriver = selenium.getDriver();
-		
+
+		List<WebElement> test = webDriver
+				.findElements(By.cssSelector("body > div.ps-room.ps-room-opaque > div.foehint *"));
+		WebElement me = test.get(1);
+
 		Actions action = new Actions(webDriver);
-		WebElement me = webDriver.findElement(By.cssSelector("div.ps-room:nth-child(47) > div:nth-child(2) > div:nth-child(2)"));
-		
-		
-		
+
 		action.moveToElement(me).perform();
 
-		sleep(15000);
+		sleep(1000);
 
 		WebElement tooltip = webDriver.findElement(By.cssSelector(".tooltip"));
 		String searchtext = tooltip.getAttribute("innerHTML");
@@ -236,15 +232,15 @@ public class BattleConnector {
 		String name;
 		try {
 			name = searchtext.substring(searchtext.indexOf("<h2>") + 4,
-					searchtext.indexOf("<small style") - (searchtext.indexOf("<h2>") + 4));
+					searchtext.indexOf("<small style") - (searchtext.indexOf("<h2>")));
 		} catch (Exception e) {
 			name = searchtext.substring(searchtext.indexOf("<h2>") + 4,
-					searchtext.indexOf("<br") - (searchtext.indexOf("<h2>") + 4));
+					searchtext.indexOf("<br") - (searchtext.indexOf("<h2>")));
 		}
 		if (name.contains("(")) {
-			name = name.substring(name.indexOf("(") + 1, name.indexOf(")") - (name.indexOf("(") + 1));
+			name = name.substring(0, name.indexOf("(") - 2);
 		}
-		return name;
+		return name.trim();
 	}
 
 	private List<Boost> getOppBoosts() {

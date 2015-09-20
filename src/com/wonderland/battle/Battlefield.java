@@ -1,5 +1,6 @@
 package com.wonderland.battle;
 
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -203,7 +204,7 @@ public class Battlefield {
 
 	@Override
 	public String toString() {
-		return String.format("Battlefield [myActivePokemon={}, enemyActivePokemon={} myTeam={}, enemyTeam={}, myHazards={}, enemyHazards={}, weather={}]", 
+		return MessageFormat.format("Battlefield [myActivePokemon={0}, enemyActivePokemon={1} myTeam={2}, enemyTeam={3}, myHazards={4}, enemyHazards={5}, weather={6}]", 
 				myActivePokemon, oppActivePokemon, myTeam.toString(), oppTeam.toString(), myHazards.toString(), oppHazards.toString(), weather.toString());
 	}
 }

@@ -1,7 +1,5 @@
 package com.wonderland.main;
 
-import java.util.Arrays;
-
 import com.wonderland.battle.Battlefield;
 import com.wonderland.battle.WebCalculator;
 import com.wonderland.connector.BattleConnector;
