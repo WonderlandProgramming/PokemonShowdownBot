@@ -9,11 +9,15 @@ import com.wonderland.general.HazardType;
 import com.wonderland.general.Pokemon;
 
 public class Battlefield {
+	
+	private Pokemon myActivePokemon;
+	private Pokemon enemyActivePokemon;
 
 	private ArrayList<Pokemon> myTeam = new ArrayList<>();
 	private ArrayList<Pokemon> oppTeam = new ArrayList<>();
 
-	private HashMap<HazardType, Hazard> hazards = new HashMap<>();
+	private HashMap<HazardType, Hazard> myHazards = new HashMap<>();
+	private HashMap<HazardType, Hazard> oppHazards = new HashMap<>();
 	private Weather weather;
 
 	public Battlefield() {
@@ -33,6 +37,34 @@ public class Battlefield {
 		for (Pokemon pokemon : oppTeam) {
 			this.oppTeam.add(pokemon);
 		}
+	}
+	
+	/**
+	 * @return my active Pokemon
+	 */
+	public Pokemon getMyActivePokemon() {
+		return myActivePokemon;
+	}
+
+	/**
+	 * @param myActivePokemon my active Pokemon to set
+	 */
+	public void setMyActivePokemon(Pokemon myActivePokemon) {
+		this.myActivePokemon = myActivePokemon;
+	}
+
+	/**
+	 * @return the enemy active Pokemon
+	 */
+	public Pokemon getEnemyActivePokemon() {
+		return enemyActivePokemon;
+	}
+
+	/**
+	 * @param enemyActivePokemon the enemy active Pokemon to set
+	 */
+	public void setEnemyActivePokemon(Pokemon enemyActivePokemon) {
+		this.enemyActivePokemon = enemyActivePokemon;
 	}
 
 	/**
@@ -76,8 +108,8 @@ public class Battlefield {
 	/**
 	 * @return the current hazards
 	 */
-	public Hazard[] getHazards() {
-		return hazards.values().toArray(new Hazard[0]);
+	public Hazard[] getMyHazards() {
+		return myHazards.values().toArray(new Hazard[0]);
 	}
 
 	/**
@@ -85,16 +117,40 @@ public class Battlefield {
 	 *            the hazard type to return
 	 * @return the hazard for the specified hazard type
 	 */
-	public Hazard getHazard(HazardType type) {
-		return hazards.get(type);
+	public Hazard getMyHazard(HazardType type) {
+		return myHazards.get(type);
 	}
 
 	/**
 	 * @param hazard
 	 *            the hazard to add
 	 */
-	public void addHazard(Hazard hazard) {
-		hazards.put(hazard.getType(), hazard);
+	public void addMyHazard(Hazard hazard) {
+		myHazards.put(hazard.getType(), hazard);
+	}
+	
+	/**
+	 * @return the current hazards
+	 */
+	public Hazard[] getOppHazards() {
+		return oppHazards.values().toArray(new Hazard[0]);
+	}
+
+	/**
+	 * @param type
+	 *            the hazard type to return
+	 * @return the hazard for the specified hazard type
+	 */
+	public Hazard getOppHazard(HazardType type) {
+		return oppHazards.get(type);
+	}
+
+	/**
+	 * @param hazard
+	 *            the hazard to add
+	 */
+	public void addOppHazard(Hazard hazard) {
+		oppHazards.put(hazard.getType(), hazard);
 	}
 
 	/**
