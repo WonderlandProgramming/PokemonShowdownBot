@@ -44,7 +44,7 @@ public class BattleConnector {
 	public void startBattle(BattlePokemon[] myTeam) {
 		WebDriver pageDirect = selenium.getDriver();
 
-		sleep(5000);
+		sleep(2500);
 
 		String oppTeam = pageDirect
 				.findElement(By.cssSelector(
@@ -106,18 +106,18 @@ public class BattleConnector {
 	}
 
 	public int pickLeadPokemon() {
-		return 2;
+		return 1;
 	}
 
 	public boolean hasEnded() {
 		WebDriver webDriver = selenium.getDriver();
 		try {
-			WebElement result = webDriver.findElement(By.cssSelector(
-					"body > div.ps-room.ps-room-opaque.tiny-layout > div.battle > div > div.messagebar.message > p"));
-			if (result.getText().contains("the battle!"))
+			WebElement messageBar = webDriver.findElement(By.cssSelector(".messagebar"));
+			if (messageBar.getText().contains("won the battle!")
+					|| messageBar.getTagName().contains("lost the battle!")) {
 				return true;
+			}
 		} catch (Exception e) {
-			return false;
 		}
 		return false;
 	}
@@ -138,8 +138,6 @@ public class BattleConnector {
 
 	public void updatePokemon() {
 
-		sleep(10000);
-
 		String myId = getMySearchText();
 		String oppId = getOpponentsSearchText();
 
@@ -149,13 +147,17 @@ public class BattleConnector {
 		BattlePokemon myPokemon = battlefield.getMyActivePokemon();
 		BattlePokemon oppPokemon = battlefield.getOppActivePokemon();
 
-		myPokemon.setCurHp(getHealth(myId));
-		myPokemon.setItem(getItem(myId));
-		myPokemon.setBoost(getMyBoosts());
+		if (myPokemon != null) {
+			myPokemon.setCurHp(getHealth(myId));
+			myPokemon.setItem(getItem(myId));
+			myPokemon.setBoost(getMyBoosts());
+		}
 
-		oppPokemon.setCurHp(getHealth(oppId));
-		oppPokemon.setItem(getItem(oppId));
-		oppPokemon.setBoost(getOppBoosts());
+		if (oppPokemon != null) {
+			oppPokemon.setCurHp(getHealth(oppId));
+			oppPokemon.setItem(getItem(oppId));
+			oppPokemon.setBoost(getOppBoosts());
+		}
 
 		System.out.println(battlefield.toString());
 	}
@@ -190,7 +192,7 @@ public class BattleConnector {
 
 		action.moveToElement(me).perform();
 
-		sleep(1000);
+		sleep(150);
 
 		WebElement tooltip = webDriver.findElement(By.cssSelector(".tooltip"));
 		String searchtext = tooltip.getAttribute("innerHTML");
@@ -274,5 +276,43 @@ public class BattleConnector {
 			boosts.add(boost);
 		}
 		return boosts;
+	}
+
+	public void waitForTurn(int thisturn) {
+		WebDriver webDriver = selenium.getDriver();
+		while (true) {
+			try {
+				WebElement turn = webDriver.findElement(By
+						.cssSelector("body > div.ps-room.ps-room-opaque > div.battle > div > div:nth-child(9) > div"));
+				String turnNumber = turn.getText().substring(5);
+				int thisturnRead = Integer.parseInt(turnNumber);
+
+				if (thisturn == thisturnRead) {
+					return;
+				}
+
+				sleep(50);
+			} catch (Exception e) {
+				sleep(50);
+			}
+
+		}
+	}
+	
+	public void setFaintedPokemon(List<String> chatLog){
+		for (String chatLine : chatLog) {
+			if(chatLine.contains("fainted")){
+				if(chatLine.startsWith("The opposing")){
+					String pkmn = chatLine.substring(12, chatLine.indexOf("fainted") - 1).trim();
+					BattlePokemon fainted = null;
+					fainted.fainted();
+				}else{
+					String pkmn = chatLine.substring(0, chatLine.indexOf("fainted") - 1).trim();
+					BattlePokemon fainted = null;
+					fainted.fainted();
+				}
+				System.out.println(chatLine);
+			}
+		}
 	}
 }

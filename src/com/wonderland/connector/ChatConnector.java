@@ -1,5 +1,8 @@
 package com.wonderland.connector;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -38,5 +41,19 @@ public class ChatConnector {
 
 	public void stop() {
 		chatBox = null;
+	}
+	
+	public List<String> getChatContext(){
+		WebElement chatElements = webInterface.findElement(By.cssSelector("body > div.ps-room.ps-room-opaque > div.battle-log > div.inner"));
+		List<WebElement> singleLines = chatElements.findElements(By.tagName("div"));
+		
+		List<String> lines = new ArrayList<>();
+		for (WebElement line : singleLines) {
+			String[] totalSingleLine = line.getText().split(",");
+			for (int i = 0; i < totalSingleLine.length; i++) {
+				if(!totalSingleLine[i].isEmpty()) lines.add(totalSingleLine[i]);
+			}
+		}
+		return lines;
 	}
 }

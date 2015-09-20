@@ -67,6 +67,7 @@ public class BattlePokemon extends Pokemon {
 	 */
 	public void fainted(){
 		fainted = true;
+		this.hp = 0.0;
 	}
 	
 	/**

@@ -20,6 +20,13 @@ public class PokemonShowdown {
 		prePage.loadTeam(config.getTeam());
 		prePage.disableMusic();
 
+		battle(prePage, calculator, webEngine, config);
+
+		webEngine.closeConnection();
+		calculator.close();
+	}
+	
+	public void battle(PrepageConnector prePage, WebCalculator calculator, Selenium webEngine, Config config){
 		if (prePage.findABattle()) {
 			// Active Battle
 			sleep(500);
@@ -40,12 +47,21 @@ public class PokemonShowdown {
 			ChatConnector chat = new ChatConnector(webEngine);
 
 			boolean ingame = true;
-
+			int turn = 1;
+			
+			sleep(10000);
+			
 			while (ingame) {
 				
-				chat.print("Das wird nicht abgeschickt ... hoffe ich :D");
+				//realy wait for the new turn to start
+				//with turn numbers ex
 				
-				sleep(500);
+				battlePage.waitForTurn(turn);
+				
+				System.out.println("New Turn! Now turn " + turn);
+
+				turn++;
+
 				
 				// check Win Loose enemy surrender etc!
 				if (battlePage.hasEnded()) {
@@ -55,58 +71,49 @@ public class PokemonShowdown {
 					break;
 				}
 				
-				sleep(500);
 				
 				// Check if pokemon fainted
 				if(battlePage.currentPokemonFainted()){
 					battlefield.getMyActivePokemon().fainted();
-					
-					sleep(500);
-					
-					int pokemonID = 0; // = AI.pickPokemon();
+								
+					int pokemonID = 6; // = AI.pickPokemon();
 					battlePage.swapIn(pokemonID);
 				}
-
-				sleep(500);
 				
 				// Update enemy
 				// update own
 				battlePage.updatePokemon();
 				
-				sleep(500);
+				sleep(100);
 		
 				// wenn mega evo dann anklicken
 				//auﬂerdem pokemon updaten das es mega ist!		
 				battlePage.tryMegaEvolve();
 				
 				
-				sleep(500);
+				sleep(100);
 				//Let the ai move the best turn, it will return Enum MOVE, CHANGE and a string for the move
 				//setup the possible moves list
 				
-				sleep(20000);
-				
 				//AI.move(battlefield)
 
-				sleep(500);
+
 				// Wait for enemy reaction
 				while (battlePage.waitingForOpponent()) {
 					sleep(1000);
 				}
 				
-				
 				// Wait for turn to end
 				sleep(15000);
+				
+				battlePage.setFaintedPokemon(chat.getChatContext());
 			}
 			
 			prePage.gotToMainMenue();
 			
 		}
-
-		webEngine.closeConnection();
-		calculator.close();
+		
 	}
-	
 	
 	public static void main(String[] args) {
 		new PokemonShowdown();
