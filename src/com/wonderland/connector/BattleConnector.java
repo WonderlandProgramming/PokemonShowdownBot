@@ -2,7 +2,9 @@ package com.wonderland.connector;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.apache.bcel.classfile.PMGClass;
 import org.openqa.selenium.By;
@@ -10,6 +12,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.wonderland.battle.BattleOption;
 import com.wonderland.battle.BattlePokemon;
 import com.wonderland.battle.Battlefield;
 import com.wonderland.battle.WebCalculator;
@@ -280,15 +283,15 @@ public class BattleConnector {
 		WebDriver webDriver = selenium.getDriver();
 		while (true) {
 			try {
-				if(this.hasEnded()){
+				if (this.hasEnded()) {
 					ingame = false;
 					break;
 				}
-				
-				if(currentPokemonFainted()){
+
+				if (currentPokemonFainted()) {
 					this.swapIn(ai.pickRandomStarter());
 				}
-				
+
 				WebElement turn = webDriver.findElement(By
 						.cssSelector("body > div.ps-room.ps-room-opaque > div.battle > div > div:nth-child(9) > div"));
 				String turnNumber = turn.getText().substring(5);
@@ -305,20 +308,64 @@ public class BattleConnector {
 
 		}
 	}
-	
-	public void setFaintedPokemon(List<String> chatLog){
+
+	public void setFaintedPokemon(List<String> chatLog) {
 		for (String chatLine : chatLog) {
-			if(chatLine.contains("fainted")){
-				if(chatLine.startsWith("The opposing")){
+			if (chatLine.contains("fainted")) {
+				if (chatLine.startsWith("The opposing")) {
 					String pkmn = chatLine.substring(12, chatLine.indexOf("fainted") - 1).trim();
 					BattlePokemon fainted = battlefield.getOppTeamPokemon(SpecialPokemon.changeName(pkmn));
 					fainted.fainted();
-				}else{
+				} else {
 					String pkmn = chatLine.substring(0, chatLine.indexOf("fainted") - 1).trim();
 					BattlePokemon fainted = battlefield.getMyTeamPokemon(SpecialPokemon.changeName(pkmn));
 					fainted.fainted();
 				}
 			}
+		}
+	}
+
+	public void move(BattleAI ai) {
+		HashMap<String, WebElement> possiblitiesToWeb = new HashMap<>();
+		List<BattleOption> possibilties = new ArrayList<>();
+		List<WebElement> moves = selenium.getDriver().findElements(By.cssSelector(
+				"body > div.ps-room.ps-room-opaque > div.battle-controls > div > div.movecontrols > div.movemenu *"));
+		for (WebElement webElement : moves) {
+			if (webElement.getAttribute("data-move") != null && !webElement.getAttribute("data-move").isEmpty()) {
+				BattleOption o = new BattleOption(BattleOption.BattleOptionType.MOVE,
+						webElement.getAttribute("data-move"));
+				possibilties.add(o);
+				possiblitiesToWeb.put(o.getName(), webElement);
+			}
+		}
+		List<WebElement> switches = selenium.getDriver().findElements(By.cssSelector(
+				"body > div.ps-room.ps-room-opaque > div.battle-controls > div > div.switchcontrols > div.switchmenu *"));
+		for (WebElement webElement : switches) {
+			if (webElement.getAttribute("name") != null && !webElement.getAttribute("name").isEmpty()
+					&& !webElement.getAttribute("name").equalsIgnoreCase("chooseDisabled")) {
+				if (webElement.getText() != null && !webElement.getText().trim().isEmpty()) {
+					BattleOption o = new BattleOption(BattleOption.BattleOptionType.SWITCH,
+							webElement.getText().trim());
+					possibilties.add(o);
+					possiblitiesToWeb.put(o.getName(), webElement);
+				}
+			}
+		}
+
+		System.out.println(possibilties);
+
+		//This is random atm
+		
+		//TODO Implementation of ai movement
+		WebElement toUse = null;
+		if(possibilties.size() > 4){
+			toUse = possiblitiesToWeb.get(possibilties.get(new Random().nextInt(4)).getName());
+		}else{
+			toUse = possiblitiesToWeb.get(possibilties.get(new Random().nextInt(possibilties.size())).getName());
+		}
+		
+		if (toUse != null) {
+			toUse.click();
 		}
 	}
 }

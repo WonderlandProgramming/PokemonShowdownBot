@@ -1,7 +1,9 @@
 package com.wonderland.main;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -90,43 +92,13 @@ public class PokemonShowdown {
 				battlePage.tryMegaEvolve();
 
 				sleep(100);
-				// Let the ai move the best turn, it will return Enum MOVE,
-				// CHANGE and a string for the move
-				// setup the possible moves list
-
-				List<BattleOption> possibilties = new ArrayList<>();
-				List<WebElement> moves = webEngine.getDriver().findElements(By.cssSelector(
-						"body > div.ps-room.ps-room-opaque > div.battle-controls > div > div.movecontrols > div.movemenu *"));
-				for (WebElement webElement : moves) {
-					if (webElement.getAttribute("data-move") != null
-							&& !webElement.getAttribute("data-move").isEmpty()) {
-						BattleOption o = new BattleOption(BattleOption.BattleOptionType.MOVE,
-								webElement.getAttribute("data-move"));
-						possibilties.add(o);
-					}
-				}
-				List<WebElement> switches = webEngine.getDriver().findElements(By.cssSelector(
-						"body > div.ps-room.ps-room-opaque > div.battle-controls > div > div.switchcontrols > div.switchmenu *"));
-				for (WebElement webElement : switches) {
-					if (webElement.getAttribute("name") != null && !webElement.getAttribute("name").isEmpty() && !webElement.getAttribute("name").equalsIgnoreCase("chooseDisabled")) {
-						if (webElement.getText() != null && !webElement.getText().trim().isEmpty()) {
-							BattleOption o = new BattleOption(BattleOption.BattleOptionType.SWITCH,
-									webElement.getText().trim());
-							possibilties.add(o);
-						}
-					}
-				}
-
-				System.out.println(possibilties);
-
-				// AI.move(battlefield)
-
-				// Wait for enemy reaction
+				
+				battlePage.move(ai);
+				
 				while (battlePage.waitingForOpponent()) {
 					sleep(1000);
 				}
 
-				// Wait for turn to end
 				sleep(15000);
 
 				battlePage.setFaintedPokemon(chat.getChatContext());

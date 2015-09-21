@@ -1,6 +1,7 @@
 package com.wonderland.battle.ai;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import com.wonderland.battle.BattlePokemon;
@@ -23,9 +24,9 @@ public class BattleAI {
 	 * @return a number representing a random starter Pokemon
 	 */
 	public int pickRandomStarter() {
-		BattlePokemon[] pokemons = battlefield.getMyTeam().toArray(new BattlePokemon[0]);
-		if(pokemons.length != 0) {
-			int random = new Random().nextInt(pokemons.length);
+		List<BattlePokemon> myTeam = battlefield.getMyTeam();
+		if(myTeam.size() != 0){
+			int random = new Random().nextInt(myTeam.size());
 			return random++;
 		}
 		return -1;
