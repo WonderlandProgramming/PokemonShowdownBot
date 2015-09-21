@@ -57,11 +57,13 @@ public class BattleConnector {
 				.getText();
 
 		String[] oppTeamArray = oppTeam.split(" \\/ ");
-
-		BattlePokemon[] oppPkmnTeam = { new BattlePokemon(oppTeamArray[0]), new BattlePokemon(oppTeamArray[1]),
-				new BattlePokemon(oppTeamArray[2]), new BattlePokemon(oppTeamArray[3]),
-				new BattlePokemon(oppTeamArray[4]), new BattlePokemon(oppTeamArray[5]) };
-
+		
+		BattlePokemon[] oppPkmnTeam = new BattlePokemon[oppTeamArray.length];
+		for (int i = 0; i < oppPkmnTeam.length; i++) {
+			oppPkmnTeam[i] = new BattlePokemon(oppTeamArray[i]);
+		}
+		
+		
 		System.out.println("My Team: " + Arrays.toString(myTeam));
 		System.out.println("Opp Team: " + Arrays.toString(oppTeamArray));
 
