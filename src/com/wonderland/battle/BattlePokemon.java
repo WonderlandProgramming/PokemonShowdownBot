@@ -16,7 +16,6 @@ import com.wonderland.general.Pokemon;
  */
 public class BattlePokemon extends Pokemon {
 	
-	private double hp;
 	private String status;
 	private String ability;
 	
@@ -30,24 +29,10 @@ public class BattlePokemon extends Pokemon {
 	 * @param name the name
 	 */
 	public BattlePokemon(String name) {
-		super(null, name, null);
+		super(name);
 		this.hp = 100.0;
 	}
 	
-	/**
-	 * @return the health
-	 */
-	public double getCurHp() {
-		return hp;
-	}
-
-	/**
-	 * @param hp the health value to set
-	 */
-	public void setCurHp(double hp) {
-		this.hp = hp;
-	}
-
 	/**
 	 * @return the status
 	 */

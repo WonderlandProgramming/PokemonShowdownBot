@@ -6,6 +6,7 @@ public class Pokemon {
 	protected List<Boost> boost;	
 	protected String name;
 	protected String item;
+	protected double hp;
 	
 	public Pokemon(List<Boost> boost, String name, String item) {
 		this.boost = boost;
@@ -41,38 +42,35 @@ public class Pokemon {
 		this.item = item;
 	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj == null) {
+	/**
+	 * @return the health
+	 */
+	public double getCurHp() {
+		return hp;
+	}
+
+	/**
+	 * @param hp the health value to set
+	 */
+	public void setCurHp(double hp) {
+		this.hp = hp;
+	}
+
+
+	public boolean equals(Pokemon pokemon){
+		if(pokemon == null){
 			return false;
 		}
-		if (!(obj instanceof Pokemon)) {
+		if(!pokemon.getName().equalsIgnoreCase(this.getName())){
 			return false;
 		}
-		Pokemon other = (Pokemon) obj;
-		if (boost == null) {
-			if (other.boost != null) {
-				return false;
-			}
-		} else if (!boost.equals(other.boost)) {
+		if(pokemon.getBoost() != pokemon.getBoost()){
 			return false;
 		}
-		if (item == null) {
-			if (other.item != null) {
-				return false;
-			}
-		} else if (!item.equals(other.item)) {
-			return false;
-		}
-		if (name == null) {
-			if (other.name != null) {
-				return false;
-			}
-		} else if (!name.equals(other.name)) {
+		if(pokemon.getCurHp() != pokemon.getCurHp()){
 			return false;
 		}
 		return true;
 	}
-	
 	
 }

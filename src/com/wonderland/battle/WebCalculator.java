@@ -2,7 +2,6 @@ package com.wonderland.battle;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Properties;
 
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -20,8 +19,8 @@ public class WebCalculator {
 	private Selenium webEngine = new Selenium();
 	private WebDriver calculator = webEngine.getDriver();
 
-	private Pokemon lastTurnOpponent;
-	private Pokemon lastTurnMyPokemon;
+	private Pokemon lastTurnOpponent = null;
+	private Pokemon lastTurnMyPokemon = null;
 
 	public WebCalculator(Config config) {
 		webEngine.get("http://fsibapt.github.io/");
@@ -34,70 +33,76 @@ public class WebCalculator {
 		teamsave.click();
 
 		sleep(1500);
-		
+
 		Alert alert = calculator.switchTo().alert();
 		sleep(150);
 		alert.accept();
 	}
 
-	public Properties calculate(Pokemon myPokemon, Pokemon oppPokemon) {
-		setPokemon(myPokemon, oppPokemon);
+	public Attack[][] calculate(Battlefield battlefied) {
+		setPokemon(battlefied);
 
+		Attack[][] rt = new Attack[2][4];
+
+		sleep(250);
+		
 		WebElement[] myMoves = {
-				calculator.findElement(By
-						.cssSelector("div.move-result-subgroup:nth-child(1) > div:nth-child(2) > label:nth-child(2)")),
-				calculator.findElement(By
-						.cssSelector("div.move-result-subgroup:nth-child(1) > div:nth-child(3) > label:nth-child(2)")),
-				calculator.findElement(By
-						.cssSelector("div.move-result-subgroup:nth-child(1) > div:nth-child(4) > label:nth-child(2)")),
-				calculator.findElement(By.cssSelector(
-						"div.move-result-subgroup:nth-child(1) > div:nth-child(5) > label:nth-child(2)")), };
+				calculator.findElement(By.cssSelector("#resultDamageL1")),
+				calculator.findElement(By.cssSelector("#resultDamageL2")),
+				calculator.findElement(By.cssSelector("#resultDamageL3")),
+				calculator.findElement(By.cssSelector("#resultDamageL4")), };
 
-		WebElement[] myMoveNames = { calculator.findElement(By.id("resultDamageL1")),
-				calculator.findElement(By.id("resultDamageL2")), calculator.findElement(By.id("resultDamageL3")),
-				calculator.findElement(By.id("resultDamageL4")) };
+		WebElement[] myMoveNames = {
+				calculator.findElement(
+						By.id("div.move-result-subgroup:nth-child(1) > div:nth-child(2) > label:nth-child(2)")),
+				calculator.findElement(
+						By.id("div.move-result-subgroup:nth-child(1) > div:nth-child(3) > label:nth-child(3)")),
+				calculator.findElement(
+						By.id("div.move-result-subgroup:nth-child(1) > div:nth-child(4) > label:nth-child(2)")),
+				calculator.findElement(
+						By.id("div.move-result-subgroup:nth-child(1) > div:nth-child(5) > label:nth-child(2)")) };
 
-		Properties myDamage = new Properties();
+		Attack[] myDamage = new Attack[4];
 
 		for (int i = 0; i < 4; i++) {
 			String myMove = myMoves[i].getText();
 			String myMoveName = myMoveNames[i].getText();
 
 			if (!myMoveName.equalsIgnoreCase("(No Move)")) {
-				myDamage.put(myMoveName, myMove.replace(".", ","));
+				myDamage[i] = new Attack(myMoveName, myMove.replace(".", ","));
 			}
 		}
 
-		WebElement[] oppMoves = {
-				calculator.findElement(By
-						.cssSelector("div.move-result-subgroup:nth-child(2) > div:nth-child(2) > label:nth-child(2)")),
-				calculator.findElement(By
-						.cssSelector("div.move-result-subgroup:nth-child(2) > div:nth-child(3) > label:nth-child(2)")),
-				calculator.findElement(By
-						.cssSelector("div.move-result-subgroup:nth-child(2) > div:nth-child(4) > label:nth-child(2)")),
-				calculator.findElement(By.cssSelector(
-						"div.move-result-subgroup:nth-child(2) > div:nth-child(5) > label:nth-child(2)")), };
+		WebElement[] oppMoves = { calculator.findElement(By.cssSelector("#resultDamageR1")),
+				calculator.findElement(By.cssSelector("#resultDamageR2")),
+				calculator.findElement(By.cssSelector("#resultDamageR3")),
+				calculator.findElement(By.cssSelector("#resultDamageR4")), };
 
-		WebElement[] oppMoveNames = { calculator.findElement(By.id("resultDamageR1")),
-				calculator.findElement(By.id("resultDamageR2")), calculator.findElement(By.id("resultDamageR3")),
-				calculator.findElement(By.id("resultDamageR4")) };
+		WebElement[] oppMoveNames = {
+			calculator.findElement(
+					By.id("div.move-result-subgroup:nth-child(2) > div:nth-child(2) > label:nth-child(2)")),
+			calculator.findElement(
+					By.id("div.move-result-subgroup:nth-child(2) > div:nth-child(3) > label:nth-child(2)")),
+			calculator.findElement(
+					By.id("div.move-result-subgroup:nth-child(2) > div:nth-child(4) > label:nth-child(2)")),
+			calculator.findElement(
+					By.id("div.move-result-subgroup:nth-child(2) > div:nth-child(5) > label:nth-child(2)")) };
 
-		Properties oppDamage = new Properties();
+		Attack[] oppDamage = new Attack[4];
 
 		for (int i = 0; i < 4; i++) {
 			String oppMove = oppMoves[i].getText();
 			String oppMoveName = oppMoveNames[i].getText();
 
 			if (!oppMoveName.equalsIgnoreCase("(No Move)")) {
-				oppDamage.put(oppMoveName, oppMove.replace(".", ","));
+				oppDamage[i] = new Attack(oppMoveName, oppMove.replace(".", ","));
 			}
 		}
 
 		excludeIntimidate();
 
-		Properties rt = new Properties();
-		rt.put("myDamage", myDamage);
-		rt.put("oppDamage", oppDamage);
+		rt[0] = myDamage;
+		rt[1] = oppDamage;
 
 		return rt;
 	}
@@ -111,14 +116,14 @@ public class WebCalculator {
 	 * @param enemyPokemonRaw
 	 *            Opponents Pokemon
 	 */
-	public void setPokemon(Pokemon myPokemonRaw, Pokemon enemyPokemonRaw) {
-		String myPokemon = myPokemonRaw.getName().replace("-Resolute", "").trim();
-		String opponentsPokemon = enemyPokemonRaw.getName().replace("-Resolute", "").trim();
+	public void setPokemon(Battlefield battlefield) {
+		String myPokemon = SpecialPokemon.changeName(battlefield.getMyActivePokemonName());
+		String opponentsPokemon = SpecialPokemon.changeName(battlefield.getOppActivePokemonName());
 
-		myPokemon = SpecialPokemon.changeName(myPokemon);
-		opponentsPokemon = SpecialPokemon.changeName(opponentsPokemon);
-
-		if (myPokemonRaw.equals(lastTurnMyPokemon)) {
+		Pokemon myPokemonRaw = battlefield.getMyActivePokemon();
+		Pokemon enemyPokemonRaw = battlefield.getOppActivePokemon();
+		
+		if (!myPokemonRaw.equals(lastTurnMyPokemon)) {
 			WebElement myControl = calculator.findElement(By.cssSelector("#s2id_autogen1 > a:nth-child(1)"));
 			myControl.click();
 
@@ -136,11 +141,16 @@ public class WebCalculator {
 				}
 			}
 
+			WebElement myHP = calculator
+					.findElement(By.cssSelector("#p1 > div:nth-child(7) > input.percent-hp.calc-trigger"));
+			myHP.clear();
+			myHP.sendKeys(Double.toString(myPokemonRaw.getCurHp()));
+
 			setBoosts(1, myPokemonRaw.getBoost());
 			lastTurnMyPokemon = new Pokemon(myPokemonRaw.getBoost(), myPokemonRaw.getName(), myPokemonRaw.getItem());
 		}
 
-		if (enemyPokemonRaw.equals(lastTurnOpponent)) {
+		if (!enemyPokemonRaw.equals(lastTurnOpponent)) {
 			WebElement opponentControl = calculator.findElement(By.cssSelector("#s2id_autogen3 > a:nth-child(1)"));
 			opponentControl.click();
 			WebElement opponentText = calculator
@@ -182,6 +192,11 @@ public class WebCalculator {
 						By.cssSelector("#p2 > div:nth-child(6) > div:nth-child(3) > select:nth-child(2)")));
 				select.selectByValue(enemyPokemonRaw.getItem().trim());
 			}
+
+			WebElement oppHP = calculator
+					.findElement(By.cssSelector("#p2 > div:nth-child(7) > input.percent-hp.calc-trigger"));
+			oppHP.clear();
+			oppHP.sendKeys(Double.toString(enemyPokemonRaw.getCurHp()));
 		}
 	}
 
@@ -239,8 +254,8 @@ public class WebCalculator {
 	 *         <b>
 	 *         <code>  type1, type2, type3, type4, opptype1, opptype2 </code>
 	 */
-	public String[] getMoveTypeAndOpponentsType(Pokemon me, Pokemon opp) {
-		setPokemon(me, opp);
+	public String[] getMoveTypeAndOpponentsType(Battlefield battlefield) {
+		setPokemon(battlefield);
 
 		String type1 = getSelectedOption(
 				new Select(calculator.findElement(By.cssSelector("#p1 > div:nth-child(8) > select:nth-child(4)"))))
@@ -265,20 +280,19 @@ public class WebCalculator {
 		return new String[] { type1, type2, type3, type4, opptype1, opptype2 };
 	}
 
-	private void setPokemon(String me, String opp) {
-		this.setPokemon(new Pokemon(null, me, null), new Pokemon(null, opp, null));
-	}
-
 	/**
-	 * This method will give you two ints which represent the Speed of you and the enemy {@link Pokemon}
-	 * @param me My Pokemon
-	 * @param opp Opponents Pokemon
+	 * This method will give you two ints which represent the Speed of you and
+	 * the enemy {@link Pokemon}
+	 * 
+	 * @param me
+	 *            My Pokemon
+	 * @param opp
+	 *            Opponents Pokemon
 	 * @return Return an array of {@link Integer} in the following order: <br>
-	 *         <b>
-	 *         <code> myPokemonSpeed, oppPokemonSpeed </code>
+	 *         <b> <code> myPokemonSpeed, oppPokemonSpeed </code>
 	 */
-	public int[] getSpeedStats(Pokemon me, Pokemon opp) {
-		setPokemon(me, opp);
+	public int[] getSpeedStats(Battlefield battlefield) {
+		setPokemon(battlefield);
 
 		int mySpeed = Integer.parseInt(calculator
 				.findElement(By.cssSelector(
@@ -289,7 +303,7 @@ public class WebCalculator {
 						"#p2 > div:nth-child(5) > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(8) > td:nth-child(6) > span:nth-child(1)"))
 				.getText());
 
-		if (me.getItem() == "Choice Scarf") {
+		if (battlefield.getMyActivePokemon().getItem() == "Choice Scarf") {
 			mySpeed = (int) (mySpeed * 1.5);
 		}
 
@@ -307,13 +321,13 @@ public class WebCalculator {
 		return new int[] { mySpeed, oppSpeed };
 	}
 
-	public boolean canStealthRock(String me, String opp) {
-		setPokemon(me, opp);
+	public boolean canStealthRock(Battlefield battlefield) {
+		setPokemon(battlefield);
 
 		Select select = new Select(calculator
 				.findElement(By.cssSelector("#p1 > div:nth-child(6) > div:nth-child(2) > select:nth-child(2)")));
 		String ability = getSelectedOption(select).getText();
-		boolean oppHasMagicBounce = Arrays.asList(SpecialPokemon.magicBounce).contains(opp);
+		boolean oppHasMagicBounce = Arrays.asList(SpecialPokemon.magicBounce).contains(battlefield.getOppActivePokemonName());
 		if (oppHasMagicBounce && !ability.contains("Mold Breaker")) {
 			return false;
 		}

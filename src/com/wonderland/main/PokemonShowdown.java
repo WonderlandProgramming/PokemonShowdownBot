@@ -1,14 +1,5 @@
 package com.wonderland.main;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Random;
-
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
-
-import com.wonderland.battle.BattleOption;
 import com.wonderland.battle.Battlefield;
 import com.wonderland.battle.WebCalculator;
 import com.wonderland.battle.ai.BattleAI;
@@ -18,6 +9,7 @@ import com.wonderland.connector.PrepageConnector;
 import com.wonderland.connector.Selenium;
 
 public class PokemonShowdown {
+	
 	public PokemonShowdown() {
 		Config config = new Config("config.json");
 
@@ -30,7 +22,9 @@ public class PokemonShowdown {
 		prePage.loadTeam(config.getTeam());
 		prePage.disableMusic();
 
-		battle(prePage, calculator, webEngine, config);
+		for (int i = 0; i < 1; i++) {
+			battle(prePage, calculator, webEngine, config);
+		}
 
 		webEngine.closeConnection();
 		calculator.close();
@@ -67,45 +61,37 @@ public class PokemonShowdown {
 
 				battlePage.waitForTurn(turn, ingame, ai);
 
-				System.out.println("New Turn! Now turn " + turn);
+				System.out.println("Turn " + turn);
 
 				turn++;
-
-				// check Win Loose enemy surrender etc!
 				if (battlePage.hasEnded()) {
-
 					System.out.println("Game has ended");
 					ingame = false;
 					break;
 				}
-
-				// Check if pokemon fainted
-				if (battlePage.currentPokemonFainted()) {
-					battlefield.getMyActivePokemon().fainted();
-
-					int pokemonID = 6; // = AI.pickPokemon();
-					battlePage.swapIn(pokemonID);
-				}
-
+				
 				battlePage.updatePokemon();
+				
+				System.out.println("My Pokemon: " + battlefield.getMyActivePokemonName() + ", Opp Pokemon: " + battlefield.getOppActivePokemonName());
 
 				battlePage.tryMegaEvolve();
 
 				sleep(100);
-				
+
 				battlePage.move(ai);
-				
+
 				while (battlePage.waitingForOpponent()) {
 					sleep(1000);
 				}
 
-				sleep(15000);
+				sleep(3000);
 
 				battlePage.setFaintedPokemon(chat.getChatContext());
 			}
 
 			prePage.gotToMainMenue();
-
+			
+			sleep(5000);
 		}
 
 	}

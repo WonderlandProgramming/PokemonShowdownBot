@@ -6,12 +6,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
 
-import org.apache.bcel.classfile.PMGClass;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.wonderland.battle.Attack;
 import com.wonderland.battle.BattleOption;
 import com.wonderland.battle.BattlePokemon;
 import com.wonderland.battle.Battlefield;
@@ -40,7 +40,7 @@ public class BattleConnector {
 			System.out.println("Choosen Starter is: " + starter.getText());
 			starter.click();
 		} catch (Exception e) {
-			System.out.println("Error picking pick manual pls");
+			System.out.println("Error can not pick a Pokemon!");
 			sleep(10000);
 		}
 
@@ -57,19 +57,18 @@ public class BattleConnector {
 				.getText();
 
 		String[] oppTeamArray = oppTeam.split(" \\/ ");
-		
+
 		BattlePokemon[] oppPkmnTeam = new BattlePokemon[oppTeamArray.length];
 		for (int i = 0; i < oppPkmnTeam.length; i++) {
 			oppPkmnTeam[i] = new BattlePokemon(oppTeamArray[i]);
 		}
-		
-		
+
 		System.out.println("My Team: " + Arrays.toString(myTeam));
 		System.out.println("Opp Team: " + Arrays.toString(oppTeamArray));
 
 		battlefield.initializeTeams(myTeam, oppPkmnTeam);
 
-		sleep(2500);
+		sleep(250);
 
 		pickStarter(pageDirect, ai);
 
@@ -116,8 +115,9 @@ public class BattleConnector {
 		WebDriver webDriver = selenium.getDriver();
 		try {
 			WebElement messageBar = webDriver.findElement(By.cssSelector(".messagebar"));
-			if (messageBar.getText().contains("won the battle!")
-					|| messageBar.getTagName().contains("lost the battle!")) {
+			if (messageBar.getText().contains("won the battle!")) {
+				return true;
+			} else if (messageBar.getTagName().contains("lost the battle!")) {
 				return true;
 			}
 		} catch (Exception e) {
@@ -130,7 +130,6 @@ public class BattleConnector {
 		try {
 			WebElement whatDo = webDriver.findElement(By.cssSelector(".whatdo"));
 			if (whatDo.getText().contains("Switch")) {
-				System.out.println("pickPokemonifDefeated");
 				return true;
 			}
 		} catch (Exception e) {
@@ -162,7 +161,7 @@ public class BattleConnector {
 			oppPokemon.setBoost(getOppBoosts());
 		}
 
-		System.out.println(battlefield.toString());
+		calculator.setPokemon(battlefield);
 	}
 
 	public void tryMegaEvolve() {
@@ -314,14 +313,17 @@ public class BattleConnector {
 	public void setFaintedPokemon(List<String> chatLog) {
 		for (String chatLine : chatLog) {
 			if (chatLine.contains("fainted")) {
+				BattlePokemon fainted = null;
 				if (chatLine.startsWith("The opposing")) {
 					String pkmn = chatLine.substring(12, chatLine.indexOf("fainted") - 1).trim();
-					BattlePokemon fainted = battlefield.getOppTeamPokemon(SpecialPokemon.changeName(pkmn));
-					fainted.fainted();
+					fainted = battlefield.getOppTeamPokemon(SpecialPokemon.changeName(pkmn));
 				} else {
-					String pkmn = chatLine.substring(0, chatLine.indexOf("fainted") - 1).trim();
-					BattlePokemon fainted = battlefield.getMyTeamPokemon(SpecialPokemon.changeName(pkmn));
+					String pkmn = chatLine.substring(0, chatLine.indexOf("fainted")).trim();
+					fainted = battlefield.getMyTeamPokemon(SpecialPokemon.changeName(pkmn));
+				}
+				if (fainted != null && !fainted.isFainted()) {
 					fainted.fainted();
+					System.out.println(fainted.getName() + " went down!");
 				}
 			}
 		}
@@ -354,20 +356,23 @@ public class BattleConnector {
 			}
 		}
 
-		System.out.println(possibilties);
+		System.out.println("There are " + possibilties.size() + " possible moves! Calculating best one!");
 
-		//This is random atm
-		
-		//TODO Implementation of ai movement
+		// TODO Implementation of ai movement
 		WebElement toUse = null;
-		if(possibilties.size() > 4){
-			toUse = possiblitiesToWeb.get(possibilties.get(new Random().nextInt(4)).getName());
-		}else{
-			toUse = possiblitiesToWeb.get(possibilties.get(new Random().nextInt(possibilties.size())).getName());
+		int id = 0;
+		if (possibilties.size() > 4) {
+			id = new Random().nextInt(4);
+		} else {
+			id = new Random().nextInt(possibilties.size());
 		}
-		
+
+		toUse = possiblitiesToWeb.get(possibilties.get(id).getName());
 		if (toUse != null) {
 			toUse.click();
 		}
+
+		System.out.println(
+				"Possibility chosen -> [" + possibilties.get(id).getOption() + "] " + possibilties.get(id).getName());
 	}
 }

@@ -24,12 +24,7 @@ public class BattleAI {
 	 * @return a number representing a random starter Pokemon
 	 */
 	public int pickRandomStarter() {
-		List<BattlePokemon> myTeam = battlefield.getMyTeam();
-		if(myTeam.size() != 0){
-			int random = new Random().nextInt(myTeam.size());
-			return random++;
-		}
-		return -1;
+		return new Random().nextInt(6) + 1;
 	}
 	
 	/**

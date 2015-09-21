@@ -174,10 +174,10 @@ public class PrepageConnector {
 	public void gotToMainMenue() {
 		WebDriver webDriver = webClient.getDriver();
 
-		sleep(500);
+		sleep(2500);
 
 		WebElement mainmenue = webDriver.findElement(By.cssSelector(
-				"body > div.ps-room.ps-room-opaque.tiny-layout > div.battle-controls > div > p:nth-child(2) > em > button:nth-child(1)"));
+				"body > div.ps-room.ps-room-opaque > div.battle-controls > div > p:nth-child(2) > em > button:nth-child(1)"));
 		mainmenue.click();
 	}
 }
